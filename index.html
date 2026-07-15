@@ -183,7 +183,7 @@
 
     <div class="field">
       <label for="textInput">なぜ（テキスト）</label>
-      <textarea id="textInput" placeholder="採集したときに感じた「なぜ」を書いてください（3行程度）" maxlength="90"></textarea>
+      <textarea id="textInput" placeholder="「なぜそれに惹かれたのか？」<br>採集したときに感じた気持ちを書いてください（3行程度）" maxlength="90"></textarea>
       <div class="count"><span id="charCount">0</span>/90</div>
     </div>
 
@@ -313,7 +313,7 @@ function drawBackground() {
     const dx = (W - drawW) / 2;
 
     ctx.save();
-    ctx.filter = 'blur(48px)';
+    ctx.filter = 'blur(100px)';
     ctx.drawImage(photoImg, dx, 0, drawW, drawH);
     ctx.restore();
 
