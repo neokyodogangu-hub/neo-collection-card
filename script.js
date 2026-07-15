@@ -189,7 +189,7 @@ function render() {
   const titleX = CARD_X + CARD_W - titleWidth;
   const titleBrightness = getAverageBrightness(titleX, cursorY, titleWidth, TITLE_LINE_H);
   ctx.textAlign = 'right';
-  ctx.fillStyle = titleBrightness < 260 ? '#ffffff' : '#254111';
+  ctx.fillStyle = titleBrightness < 140 ? '#ffffff' : '#171717';
   ctx.fillText(TITLE, CARD_X + CARD_W, cursorY);
   cursorY += TITLE_LINE_H + GAP_TITLE_CARD;
 
