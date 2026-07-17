@@ -160,3 +160,6 @@ canvas{
   color:var(--muted);
   text-align:center;
 }
+.downloadCardBtn{
+  margin-top:16px
+}
