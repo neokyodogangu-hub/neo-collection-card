@@ -256,7 +256,7 @@ downloadBtn.addEventListener('click', () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'neo_gou_sanpo.png';
+    a.download = 'neo_kyo_sanpo.png';
     a.click();
     URL.revokeObjectURL(url);
   }, 'image/png');
@@ -277,7 +277,7 @@ downloadCardBtn.addEventListener('click', () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'neo_gou_sanpo_card.png';
+    a.download = 'neo_kyo_sanpo_card.png';
     a.click();
     URL.revokeObjectURL(url);
   }, 'image/png');
