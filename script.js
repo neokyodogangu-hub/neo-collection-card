@@ -100,6 +100,31 @@ function getFileDateSuffix() {
   return y + m.padStart(2, '0') + d.padStart(2, '0'); // "YYYYMMDD"
 }
 
+// localStorageが使えない環境（プレビューのサンドボックス等）向けのフォールバック
+let inMemorySeqCounts = { card: {}, full: {} };
+
+// kind ('card' または 'full') ごとに独立したカウンターを管理し、
+// 指定した日付キー（YYYYMMDD）の「その日の何回目の保存か」を返してカウントを1つ進める
+function getNextSequenceNumber(dateKey, kind) {
+  const STORAGE_KEY = 'neo_kyo_sanpo_seq_counts_' + kind;
+  let counts = {};
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    counts = raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    counts = inMemorySeqCounts[kind];
+  }
+  const next = (counts[dateKey] || 0) + 1;
+  counts[dateKey] = next;
+  inMemorySeqCounts[kind] = counts;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(counts));
+  } catch (e) {
+    // 保存できない場合はメモリ内のみで管理（ページを閉じるとリセット）
+  }
+  return next;
+}
+
 function drawRoundedRect(x, y, w, h, r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
@@ -264,7 +289,12 @@ downloadBtn.addEventListener('click', () => {
     const a = document.createElement('a');
     a.href = url;
     const suffix = getFileDateSuffix();
-    a.download = suffix ? `neo_kyo_sanpo_${suffix}.png` : 'neo_gou_sanpo.png';
+    if (suffix) {
+      const seq = String(getNextSequenceNumber(suffix, 'full')).padStart(2, '0');
+      a.download = `neo_kyo_sanpo_${suffix}-${seq}.png`;
+    } else {
+      a.download = 'neo_kyo_sanpo.png';
+    }
     a.click();
     URL.revokeObjectURL(url);
   }, 'image/png');
@@ -286,7 +316,12 @@ downloadCardBtn.addEventListener('click', () => {
     const a = document.createElement('a');
     a.href = url;
     const suffix = getFileDateSuffix();
-    a.download = suffix ? `neo_kyo_sanpo_card_${suffix}.png` : 'neo_gou_sanpo_card.png';
+    if (suffix) {
+      const seq = String(getNextSequenceNumber(suffix, 'card')).padStart(2, '0');
+      a.download = `neo_kyo_sanpo_card_${suffix}-${seq}.png`;
+    } else {
+      a.download = 'neo_kyo_sanpo_card.png';
+    }
     a.click();
     URL.revokeObjectURL(url);
   }, 'image/png');
