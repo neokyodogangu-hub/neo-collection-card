@@ -93,6 +93,13 @@ function formatDate() {
   return y + '.' + mm + '.' + dd;
 }
 
+function getFileDateSuffix() {
+  const val = dateInput.value; // "YYYY-MM-DD"
+  if (!val) return '';
+  const [y, m, d] = val.split('-');
+  return y + m.padStart(2, '0') + d.padStart(2, '0'); // "YYYYMMDD"
+}
+
 function drawRoundedRect(x, y, w, h, r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
@@ -256,7 +263,8 @@ downloadBtn.addEventListener('click', () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'neo_kyo_sanpo.png';
+    const suffix = getFileDateSuffix();
+    a.download = suffix ? `neo_gou_sanpo_${suffix}.png` : 'neo_gou_sanpo.png';
     a.click();
     URL.revokeObjectURL(url);
   }, 'image/png');
@@ -277,7 +285,8 @@ downloadCardBtn.addEventListener('click', () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'neo_kyo_sanpo_card.png';
+    const suffix = getFileDateSuffix();
+    a.download = suffix ? `neo_gou_sanpo_card_${suffix}.png` : 'neo_gou_sanpo_card.png';
     a.click();
     URL.revokeObjectURL(url);
   }, 'image/png');
