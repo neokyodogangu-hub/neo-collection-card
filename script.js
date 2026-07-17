@@ -6,6 +6,10 @@ const dateInput = document.getElementById('dateInput');
 const textInput = document.getElementById('textInput');
 const charCount = document.getElementById('charCount');
 const downloadBtn = document.getElementById('downloadBtn');
+const downloadCardBtn = document.getElementById('downloadCardBtn');
+
+// render() のたびに更新される、カード領域の座標・サイズ
+let cardBounds = { x: 0, y: 0, w: 0, h: 0 };
 
 // デフォルトは生成する日（今日）
 function todayString() {
@@ -189,7 +193,7 @@ function render() {
   const titleX = CARD_X + CARD_W - titleWidth;
   const titleBrightness = getAverageBrightness(titleX, cursorY, titleWidth, TITLE_LINE_H);
   ctx.textAlign = 'right';
-  ctx.fillStyle = titleBrightness < 140 ? '#ffffff' : '#171717';
+  ctx.fillStyle = titleBrightness < 140 ? '#ffffff' : '#111111';
   ctx.fillText(TITLE, CARD_X + CARD_W, cursorY);
   cursorY += TITLE_LINE_H + GAP_TITLE_CARD;
 
@@ -203,6 +207,8 @@ function render() {
   drawRoundedRect(CARD_X, cardY, CARD_W, CARD_H, CARD_RADIUS);
   ctx.fill();
   ctx.restore();
+
+  cardBounds = { x: CARD_X, y: cardY, w: CARD_W, h: CARD_H };
 
   // 写真（正方形トリミング）
   const photoX = CARD_X + CARD_PAD_SIDE;
@@ -242,6 +248,7 @@ function render() {
   ctx.fillStyle = '#111111';
 
   downloadBtn.disabled = !photoImg;
+  downloadCardBtn.disabled = !photoImg;
 }
 
 downloadBtn.addEventListener('click', () => {
@@ -250,6 +257,27 @@ downloadBtn.addEventListener('click', () => {
     const a = document.createElement('a');
     a.href = url;
     a.download = 'neo_gou_sanpo.png';
+    a.click();
+    URL.revokeObjectURL(url);
+  }, 'image/png');
+});
+
+downloadCardBtn.addEventListener('click', () => {
+  const { x, y, w, h } = cardBounds;
+  if (!w || !h) return;
+
+  // カード部分だけを新しいキャンバスに切り出す
+  const cropCanvas = document.createElement('canvas');
+  cropCanvas.width = w;
+  cropCanvas.height = h;
+  const cropCtx = cropCanvas.getContext('2d');
+  cropCtx.drawImage(canvas, x, y, w, h, 0, 0, w, h);
+
+  cropCanvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'neo_gou_sanpo_card.png';
     a.click();
     URL.revokeObjectURL(url);
   }, 'image/png');

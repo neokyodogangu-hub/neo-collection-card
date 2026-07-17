@@ -125,6 +125,17 @@ button:disabled{
   background:#bbb;
   cursor:not-allowed;
 }
+button.secondary{
+  margin-top:12px;
+  background:#ffffff;
+  color:var(--ink);
+  border:1.5px solid var(--ink);
+}
+button.secondary:disabled{
+  background:#ffffff;
+  color:#bbb;
+  border-color:#ccc;
+}
 .preview-col{
   display:flex;
   flex-direction:column;
